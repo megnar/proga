@@ -9,8 +9,8 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define path "fifo.c"
-#define pathname "inp2"
+#define path "/home/podles/Downloads/newproc.c"
+#define pathname "/home/podles/Downloads/serv.c"
 int main(int argc, char *argv[])
 {	
         if(argc < 2){
@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
 //	buf[2] = 5;
 		
 		if ( semop (sem_id, my_sem, 4 ) == -1){
-        	        perror("mop2 error\n");
-               		return errno;
+        	        printf("mop2 error\n");
+               		exit (errno);
        		}
 
 //	printf("sem1 %d,sem 2 %d ", (semctl(sem_id, 0, GETVAL, 0 )), (semctl(sem_id, 1, GETVAL, 0 )));
@@ -103,8 +103,8 @@ int main(int argc, char *argv[])
 	        my_sem[0].sem_op = 1;
 	        my_sem[0].sem_flg = 0;
 		if ( semop (sem_id, my_sem, 1 ) == -1){
-                        perror("mop3 error\n");
-                        return errno;
+                        printf("mop3 error\n");
+                        exit(errno);
                 }
 
 	}

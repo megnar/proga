@@ -9,8 +9,9 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define path "fifo.c"
-#define pathname "inp2"
+#define path "/home/podles/Downloads/newproc.c"
+#define pathname "/home/podles/Downloads/serv.c"
+
 
 int main(int argc, char *argv[])
 {	
@@ -18,11 +19,11 @@ int main(int argc, char *argv[])
         key_t shm_key, shm_key1;
 	struct sembuf my_sem[4];
         if ( (shm_key = ftok(path, 0)) == -1){
-		printf("ftok error\n");
+		printf("ftok error1\n");
 		exit (errno);
        	}
 	if ( (shm_key1 = ftok(pathname , 0)) < 0){
-                printf("ftok error\n");
+                printf("ftok error2\n");
                 exit (errno);
         }
 
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
                 my_sem[2].sem_op = -1;
                 my_sem[2].sem_flg = SEM_UNDO;
 
-                my_sem[3].sem_num = 1;
+                my_sem[3].sem_num = 0;
                 my_sem[3].sem_op = 0;
                 my_sem[3].sem_flg = IPC_NOWAIT;
 
@@ -90,8 +91,8 @@ int main(int argc, char *argv[])
 	        my_sem[0].sem_op = 1;
 	        my_sem[0].sem_flg = 0;
 		if ( semop (sem_id, my_sem, 1 ) == -1){
-                        perror("mop3 error\n");
-                        return errno;
+                        printf("mop3 error\n");
+                        exit (errno);
                 }
 
 	}
