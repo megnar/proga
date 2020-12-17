@@ -17,7 +17,7 @@ int main(int argc, char * argv[]){
 		exit(-1);
 	}
 
-	struct stat *about_file = (struct stat *) malloc (sizeof(struct stat));
+
 	char *data;
 	data = (char *) malloc (50*sizeof(char));
 	char *file;
@@ -55,13 +55,23 @@ int main(int argc, char * argv[]){
 		exit (errno);
 	}
 
-	if( read(fd_r, text, max_file_size)  == -1){
-		printf("read from fifo error\n");
-		exit (errno);
+	while(1){
+		int rd =  read(fd_r, text, max_file_size);
+		if (rd == -1){
+			printf("write in fifo error\n");
+			exit (errno);
+		}
+		if (rd < max_file_size)
+			break;
+		if ((write(1, text, rd)) == -1) {
+			printf("write error\n");
+			exit(errno);
+		}
+		
 	}
 	close(fd_r);
-	printf("%s", text);
-	free(about_file);
+	printf("%s", text);// прикол 
+
 	free(data);
 	free(file);
 }

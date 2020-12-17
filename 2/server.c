@@ -12,10 +12,13 @@
 #define path "/home/podles/Downloads/newproc.c"
 #define pathname "/home/podles/Downloads/serv.c"
 
+#define page_size 4096
+#define N 256
+#define size 13
 
 int main(int argc, char *argv[])
 {	
-	
+	open(path, O_CREAT);
         key_t shm_key, shm_key1;
 	struct sembuf my_sem[4];
         if ( (shm_key = ftok(path, 0)) == -1){
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
                 exit(errno);
         }
 
-	int i = 0; 
+
 //	semctl(sem_id, 0 , SETVAL, 1 );
   //      (semctl(sem_id, 1, SETVAL, 0));
   	while(1){
@@ -84,8 +87,18 @@ int main(int argc, char *argv[])
        		}
 
 //	printf("sem1 %d,sem 2 %d ", (semctl(sem_id, 0, GETVAL, 0 )), (semctl(sem_id, 1, GETVAL, 0 )));
-      		printf ("%c", *(buf + i) );
-		i++;
+      		int need_size = 0;
+		int two_power = 1;
+		for (int i = 1; i <= size; i++){
+			if ( *(buf+size-i) == '1'){
+				need_size += two_power;//считаем требуемый размер файла
+			}
+			two_power = two_power * 2;
+		}
+		if ((write(1, buf+size, need_size)) == -1) {//
+			printf("write error\n");
+			exit(errno);
+		}
 
 		my_sem[0].sem_num = 0;
 	        my_sem[0].sem_op = 1;

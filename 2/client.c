@@ -11,6 +11,9 @@
 
 #define path "/home/podles/Downloads/newproc.c"
 #define pathname "/home/podles/Downloads/serv.c"
+#define page_size 4096
+#define N 256
+#define size 13
 int main(int argc, char *argv[])
 {	
         if(argc < 2){
@@ -57,7 +60,7 @@ int main(int argc, char *argv[])
 		return errno;
 	}
 
-	int i = 0; 
+	 
 	int fd;
         if (( fd = open (argv[1], O_RDONLY) ) == -1) {
                 printf("error open\n");
@@ -92,13 +95,23 @@ int main(int argc, char *argv[])
         	        printf("mop2 error\n");
                		exit (errno);
        		}
-
-//	printf("sem1 %d,sem 2 %d ", (semctl(sem_id, 0, GETVAL, 0 )), (semctl(sem_id, 1, GETVAL, 0 )));
-      		if ( read(fd, buf+i, 1) != 1){
-			exit(-1);
+		int rd = read(fd, buf+size, page_size);//записываем текст 
+		int new_rd = rd;
+		if( rd  == -1){
+			printf("read from file error\n");
+			exit (errno);
 		}
-		i++;
-		sleep(1);
+		for (int i = 1; i <= size; i ++){
+			if (new_rd % 2 == 0)
+				*(buf + size - i) = '0';//записываем в буф размер
+			else
+				*(buf + size - i) = '1';
+			new_rd = new_rd / 2;
+		}
+		if( rd == 0){
+			break;
+		}
+		
 		my_sem[0].sem_num = 1;
 	        my_sem[0].sem_op = 1;
 	        my_sem[0].sem_flg = 0;
