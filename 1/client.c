@@ -70,7 +70,7 @@ int main(int argc, char * argv[]){
 		
 	}
 	close(fd_r);
-	printf("%s", text);// прикол 
+	
 
 	free(data);
 	free(file);
