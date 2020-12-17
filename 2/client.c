@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
         	        printf("mop2 error\n");
                		exit (errno);
        		}
-		int rd = read(fd, buf+size, page_size);//записываем текст 
+		int rd = read(fd, buf+size, page_size);//читаем текст 
 		int new_rd = rd;
 		if( rd  == -1){
 			printf("read from file error\n");
