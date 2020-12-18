@@ -9,13 +9,21 @@
 #include <sys/sem.h>
 #include <errno.h>
 
-#define path "/home/podles/Downloads/newproc.c"
+
 #define pathname "/home/podles/Downloads/serv.c"
 #define page_size 4096
 #define N 256
 #define size 13
 int main(int argc, char *argv[])
 {	
+	char dir[N];
+	if (getcwd(dir, N) == NULL) {
+		printf("getcwd error\n");
+			exit(errno);
+	}
+	char path[N];
+	
+	sprintf(path, "%s/file.txt", dir);
         if(argc < 2){
                 perror("argv");
                 return errno;
@@ -38,22 +46,22 @@ int main(int argc, char *argv[])
 		perror("ftok error\n");
 		return (errno);
        	}
-	if ( (shm_key1 = ftok(pathname , 0)) < 0){
+	if ( (shm_key1 = ftok(path , 1)) < 0){
                 perror("ftok error\n");
                 return (errno);
         }
 
-       	int shm_id;
-       	if ( (shm_id =  shmget(shm_key, 4096, IPC_CREAT|0666)) == -1){
+        int shm_id;
+        if ( (shm_id =  shmget(shm_key, 4096, IPC_CREAT|0666)) == -1){
 		perror("shmget error\n");
 		return(errno);
-       	}
+        }
 
-       	char *buf;
-        if ( (buf = (char *) shmat (shm_id, NULL, 0)) == (char *)(-1) ){
-       		perror("shmat error\n");
+        char *buf;
+	if ( (buf = (char *) shmat (shm_id, NULL, 0)) == (char *)(-1) ){
+       	perror("shmat error\n");
 		return(errno);
-       	}
+	}
 	int sem_id;
 	if ( (sem_id =  semget(shm_key1, 3, IPC_CREAT|0666)) < 0){
 		perror("semget");
